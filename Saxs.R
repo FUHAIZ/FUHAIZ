@@ -1,5 +1,5 @@
 # R version 4.1.0
-# 21-Jun-2021 Fuhai Zhou
+# 24-Jun-2021 Fuhai Zhou
 # date from Dr. Jiayi Zhao and Prof.Sanjay
 
 # get monitor
@@ -55,45 +55,62 @@ for (i in 1:M) {
   }
 }
 
+install.packages("plyr")
+library(plyr)
+Iq_peak_total <- data.frame()
+Iq2_peak_total <- data.frame()
 integrate <- data.frame()
+integrate_from <- 1 #input your value
+integrate_to <- 1.5 #input your value
 for (i in 1:M) {
   Iq <- cbind(Iq_three[[i]][,1], Iq_three[[i]][,2])
   Iq2 <- cbind(Iq_three[[i]][,1], Iq_three[[i]][,2] * Iq_three[[i]][,1] * Iq_three[[i]][,1])
   Is2 <- cbind(Iq_three[[i]][,1]/(2 * pi), Iq_three[[i]][,2] * (Iq_three[[i]][,1]/(2 * pi)) * (Iq_three[[i]][,1]/(2 * pi)))
+  Is2_1000 <- Is2[seq(1, length(Is2[,1]), by = ceiling(length(Is2[,1])/1000)),]
   
   # write.table(Iq,  file = paste(fileName_two[i], "_Iq.txt"), row.names = FALSE, col.names = FALSE)
   write.table(Iq2,  file = paste(fileName_two[i], "_Iq2.txt"), row.names = FALSE, col.names = FALSE)
   write.table(Is2,  file = paste(fileName_two[i], "_Is2.txt"), row.names = FALSE, col.names = FALSE)
+  write.table(Is2_1000,  file = paste(i-1, ".dat"), row.names = FALSE, col.names = FALSE)
   
   
+  Iq_peak <- fileName_two[i]
+  for (j in 2:(length(Iq[, 1]) - 1)) {
+    if (Iq[j, 2] - Iq[j - 1, 2] > 0 & Iq[j, 2] - Iq[j + 1, 2] > 0) {
+      Iq_peak_position <- cbind(Iq[j, 1], 2 * pi / Iq[j, 1])
+    }
+    Iq_peak <- cbind(Iq_peak, Iq_peak_position)
+  }
+  Iq_peak_total <- rbind.fill(Iq_peak_total, Iq_peak)
+
   
-  # for (j in 2:(length(Iq[, 1]) - 1)) {
-  #   if (Iq[j, 2] - Iq[j - 1, 2] > 0 & Iq[j, 2] - Iq[j + 1, 2] > 0) {
-  #     Iq_peak <- cbind(Iq[j, 1], 2 * pi / Iq[j, 1])
-  #     write.table(Iq_peak,  file = paste(fileName_two[i], "_Iq_peak.txt"), row.names = FALSE, col.names = FALSE)
-  #   }
-  # 
-  # }
-  # 
-  # 
-  # for (j in 2:(length(Iq2[, 1]) - 1)) {
-  #   if (Iq2[k, 2] - Iq2[k - 1, 2] > 0 & Iq2[k, 2] - Iq2[k + 1, 2] > 0) {
-  #     Iq2_peak <- cbind(Iq2[k, 1], 2 * pi / Iq2[k, 1])
-  #     write.table(Iq2_peak,  file = paste(fileName_two[i], "_Iq2_peak.txt"), row.names = FALSE, col.names = FALSE)
-  #   }
-  # }
+  Iq2_peak <- fileName_two[i]
+  for (j in 2:(length(Iq2[, 1]) - 1)) {
+    if (Iq2[k, 2] - Iq2[k - 1, 2] > 0 & Iq2[k, 2] - Iq2[k + 1, 2] > 0) {
+      Iq2_peak_position <- cbind(Iq2[k, 1], 2 * pi / Iq2[k, 1])
+    }
+    Iq2_peak <- cbind(Iq2_peak, Iq2_peak_position)
+  }
+  Iq2_peak_total <- rbind.fill(Iq2_peak_total, Iq2_peak)
   
-  
+  # get integrate
+  for (j in 1:length(Iq2[, 1])) {
+    while (Iq2[j,1] < integrate_from) {
+      position_integrate_from <- j
+    }
+    if (Iq2[j,1] < integrate_to) {
+      position_integrate_to <- j
+    }
+  }
   s <- 0
-  for (j in (1:length(Iq2[, 1]) -1)) {
+  for (j in (position_integrate_from : position_integrate_to)) {
     s <-  s + (Iq2[j + 1, 1]- Iq2[j, 1])*(Iq2[j, 1]*Iq2[j, 1]*Iq2[j, 2] + Iq2[j + 1, 1]*Iq2[j + 1, 1]*Iq2[j + 1, 2])/2
   }
   integrate[i,1] <- fileName_two[i]
   integrate[i,2] <- s
   
 }
+write.csv(Iq_peak_total, file = "Iq_peak_total.csv")
+write.csv(Iq2_peak_total, file = "Iq2_peak_total.csv")
 write.csv(integrate, file = "total_integral.csv")
-
-
-
 
