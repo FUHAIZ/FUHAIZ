@@ -40,26 +40,26 @@ Iq_four <- vector("list", M)
 for (i in 1:M) {
   if (1 == q) {
     # normalize and background
-    Iq_four[[i]] <-  cbind(bkg[, 1], datalist_two[[i]][, 2]/monitor[i] - (bkg[, 2]/monitor[i]) * c)
+    Iq_four[[i]] <-  cbind(datalist_two[[i]][, 1], datalist_two[[i]][, 2]/monitor[i] - (bkg[, 2]/monitor[i]) * c)
     write.table(Iq_four[[i]],  file = paste(fileName_two[i], "_normalize_bkg.dat", sep = ""), row.names = FALSE, col.names = FALSE)
   }
   if (2 == q) {
     # normalize and non background
     c <- 0
-    Iq_four[[i]] <-  cbind(bkg[, 1], datalist_two[[i]][, 2]/monitor[i] - (bkg[, 2]/monitor[i]) * c)
+    Iq_four[[i]] <-  cbind(datalist_two[[i]][, 1], datalist_two[[i]][, 2]/monitor[i] - (bkg[, 2]/monitor[i]) * c)
     write.table(Iq_four[[i]],  file = paste(fileName_two[i], "_non_normalize_bkg.dat", sep = ""), row.names = FALSE, col.names = FALSE)
   }
   if (3 == q) {
     # non normalize and background
     monitor[i] <- 1
-    Iq_four[[i]] <-  cbind(bkg[, 1], datalist_two[[i]][, 2]/monitor[i] - (bkg[, 2]/monitor[i]) * c)
+    Iq_four[[i]] <-  cbind(datalist_two[[i]][, 1], datalist_two[[i]][, 2]/monitor[i] - (bkg[, 2]/monitor[i]) * c)
     write.table(Iq_four[[i]],  file = paste(fileName_two[i], "_non_normalize_non_bkg.dat", sep = ""), row.names = FALSE, col.names = FALSE)
   }
   if (4 == q) {
     # non normalize and non background
     monitor[i] <- 1
     c <- 0
-    Iq_four[[i]] <-  cbind(bkg[, 1], datalist_two[[i]][, 2]/monitor[i] - (bkg[, 2]/monitor[i]) * c)
+    Iq_four[[i]] <-  cbind(datalist_two[[i]][, 1], datalist_two[[i]][, 2]/monitor[i] - (bkg[, 2]/monitor[i]) * c)
     write.table(Iq_four[[i]],  file = paste(fileName_two[i], "_normalize_non_bkg.dat", sep = ""), row.names = FALSE, col.names = FALSE)
   }
 }
