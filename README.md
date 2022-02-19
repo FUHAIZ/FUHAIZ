@@ -1,2 +1,2 @@
 - 👋 Hi, welcome to polymer science.
-- 👀 Here is a series of programs developed in Prof. Sanjay Rastogi's group.
+- 👀 Here are a series of programs developed in Prof. Sanjay Rastogi's group.
